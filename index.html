@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Bundi Ke Ladoo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --cherry: #d2042d; --maroon: #800000; --gold: #ffd700; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; font-family: 'Poppins', sans-serif; overflow: hidden; background: #fffafb; }
+
+        /* 1. FLOATING HANGING HEARTS */
+        .hearts-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+        .hanging-heart { position: absolute; top: -20px; width: 2px; background: rgba(255, 105, 180, 0.4); transform-origin: top; animation: swing var(--speed) infinite ease-in-out; }
+        .hanging-heart::after { content: '❤️'; position: absolute; bottom: -30px; left: -18px; font-size: var(--size); }
+        @keyframes swing { 0%, 100% { transform: rotate(-15deg); } 50% { transform: rotate(15deg); } }
+
+        /* 2. NAVIGATION SYSTEM */
+        .slide { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 10; padding: 20px; }
+        .active { display: flex !important; }
+
+        /* 3. THE SQUARISH LETTER CARD */
+        .modal { display: none; position: fixed; inset: 0; z-index: 1000; align-items: center; justify-content: center; padding: 15px; }
+        .letter-card {
+            background: white; 
+            width: 95%; max-width: 520px; /* Wider */
+            height: auto; min-height: 550px; /* Less difference between L and W */
+            padding: 40px 25px; border-radius: 35px; 
+            position: relative; box-shadow: 0 40px 100px rgba(0,0,0,0.5); 
+            overflow-y: auto; max-height: 85vh;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .top-photo {
+            width: 210px; height: 210px; object-fit: cover; /* Square photo ratio */
+            border: 8px solid white; border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); margin-bottom: 25px;
+        }
+
+        /* 4. THE CORNER ANIMATIONS (No Cutoffs) */
+        .huge-corner { position: absolute; font-size: 110px; z-index: 2005; pointer-events: none; }
+        .t-l { top: -25px; left: -25px; animation: bounce 3s infinite; } /* Teddy 🧸 */
+        .t-r { top: -20px; right: -20px; background: white; padding: 12px; border-radius: 15px; font-size: 26px; color: var(--cherry); font-weight: bold; border-top: 10px solid red; box-shadow: 0 15px 30px rgba(0,0,0,0.1); line-height: 1; }
+        .b-l { bottom: -25px; left: -25px; animation: pulse 1s infinite; } /* Heart ❤️ */
+        .b-r { bottom: -25px; right: -25px; animation: shake 0.5s infinite; } /* Party 🎉 */
+
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        @keyframes shake { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(15deg); } 75% { transform: rotate(-15deg); } }
+
+        /* 5. DRAMATIC VOUCHER */
+        .voucher-drama {
+            background: linear-gradient(135deg, #ffd700, #fff8dc, #ffd700);
+            padding: 40px 30px; border-radius: 30px; border: 6px dashed var(--maroon);
+            animation: pulse 0.7s infinite; box-shadow: 0 0 70px var(--gold);
+            text-align: center; max-width: 400px;
+        }
+
+        /* 6. GAME STYLES */
+        .box-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 20px; }
+        .box { width: 130px; height: 130px; background: white; border: 5px solid var(--cherry); border-radius: 30px; font-size: 65px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
+        .box:active { transform: scale(0.9); }
+
+        /* 7. BUTTONS */
+        .btn { padding: 16px 32px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; transition: 0.3s; }
+        .btn-cherry { background: var(--cherry); color: white; margin-top: 15px; }
+        .btn-green { background: #25D366; color: white; width: 100%; margin-top: 25px; font-size: 1.2rem; box-shadow: 0 10px 20px rgba(37,211,102,0.4); text-align: center; }
+        .btn-try { background: #eee; color: #333; margin-top: 20px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <audio id="tadaSound" src="https://www.myinstants.com/media/sounds/tada.mp3"></audio>
+    <div class="hearts-container" id="hearts-bg"></div>
+
+    <div id="slide1" class="slide active">
+        <h1 style="font-family: 'Dancing Script'; font-size: 2.8rem; color: var(--maroon);">There is something special today... wanna me to reveal it? 😌</h1>
+        <div style="display: flex; gap: 20px;">
+            <button class="btn btn-cherry" onclick="nav('slide2')">YES ✨</button>
+            <button class="btn" style="background: #ddd; color: #333;" onclick="nav('slide-no')">NO 🥺</button>
+        </div>
+    </div>
+
+    <div id="slide-no" class="slide">
+        <div style="font-size: 100px;">💔</div>
+        <h2 style="color: var(--cherry); font-size: 2rem;">Awwwwww... u broke my heart 🥺😫</h2>
+        <button class="btn btn-cherry" onclick="nav('slide1')">Give me another chance!</button>
+    </div>
+
+    <div id="slide2" class="slide">
+        <div style="font-size: 80px;">🐥</div>
+        <h1 style="font-family: 'Dancing Script'; font-size: 2.8rem; color: var(--maroon); padding: 0 15px;">There is nothing special more than you bundi ke ladoo 🐥</h1>
+        <button class="btn btn-cherry" onclick="nav('slide3')">Now choose a box! 🎁</button>
+    </div>
+
+    <div id="slide3" class="slide">
+        <h1 style="font-family: 'Dancing Script'; font-size: 2.5rem; color: var(--maroon);">Pick your gift 🎁</h1>
+        <p id="chance-text" style="color: var(--cherry); font-weight: bold; font-size: 1.5rem;">Chances left: 3</p>
+        <div class="box-grid">
+            <div class="box" onclick="checkBox(1)">🎁</div>
+            <div class="box" onclick="checkBox(2)">🎁</div>
+            <div class="box" onclick="checkBox(3)">🎁</div>
+            <div class="box" onclick="checkBox(4)">🎁</div>
+        </div>
+    </div>
+
+    <div id="modal-1" class="modal" style="background: rgba(0,0,0,0.9);">
+        <div class="voucher-drama">
+            <h1 style="margin:0; font-size: 2.5rem; color: var(--maroon);">🔥 OVERHYPED!! 🔥</h1>
+            <div style="font-size: 80px;">🎟️🌹🚢</div>
+            <h2 style="margin: 10px 0;">MEGA TRIP VOUCHER UNLOCKED!</h2>
+            <p style="font-weight: bold;">You just won a full luxury trip and 1000 Red Roses! 🌹✨</p>
+            <button class="btn btn-cherry" onclick="alert('Ticket Confirmed! 👑')">CLAIM NOW!! 👑</button>
+            <br><button class="btn btn-try" onclick="closeAll()">I want more! Try again 😉</button>
+        </div>
+    </div>
+
+    <div id="modal-4" class="modal" style="background: rgba(0,0,0,0.85);">
+        <div style="background: white; padding: 40px; border-radius: 30px; text-align: center; border: 5px solid var(--cherry);">
+            <div style="font-size: 70px;">🎤🔥</div>
+            <h3>DARE!</h3>
+            <p style="font-size: 1.1rem;">I dare you to send me **Voice Messages** for the **whole year** instead of text! 🫠🤌🏻</p>
+            <button class="btn btn-try" onclick="closeAll()">Accept & Try Again 😎</button>
+        </div>
+    </div>
+
+    <div id="modal-3" class="modal" style="background: var(--cherry);">
+        <div class="huge-corner t-l">🧸</div> 
+        <div class="huge-corner t-r">FEB<br>07</div>
+        <div class="huge-corner b-l">❤️</div>
+        <div class="huge-corner b-r">🎉</div>
+
+        <div class="letter-card">
+            <img src="IMG_20251228_075947.jpg" class="top-photo" alt="Birthday Photo">
+            
+            <div style="color: #333; line-height: 1.6; text-align: center;">
+                <p>It may feel like cringe, but I thought my favourite thing to listen to was music till I heard your laugh 😭🤌🏻</p>
+                <h2 style="font-family: 'Dancing Script'; font-size: 2.2rem; color: var(--cherry); margin: 10px 0;">Happy Birthday Cutie 🫂</h2>
+                <p>It's not just about the day, but about the upcoming achievements, happiness, and wealth you are going to achieve 🥹❤️<br><br>
+                Keep shining, and keep one thing in mind that you don't have to be strong always 🙃🙃<br><br>
+                Whenever things feel overwhelming or stressful, you can consider me without any second thought 🫠<br><br>
+                I don't know how your next birthdays will be for me, but let me wish this one with all my heart 🥹❤️<br><br>
+                Thank you for being patient with me, and just remember one thing — if we ever become strangers again, always protect and respect what we share 🫠🤌🏻<br><br>
+                And always be the <b>GENTLEMAN as you are</b> 🫂<br><br>
+                Lob U Sooo Much ❤️✨ my ungrateful potato.<br><br>
+                Don’t let anyone dim your spark and smile 🫂</p>
+                
+                <a href="https://wa.me/?text=Jagruti...%20I%20just%20saw%20everything!%20🫂❤️%20Thank%20you%20so%20much%20for%20making%20this%20for%20me!" class="btn btn-green">Send Jagruti a "Thank You" Message & Hug 🫂❤️</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let attempts = 3;
+
+        function nav(id) {
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeAll() {
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+            document.getElementById('chance-text').innerText = "Chances left: " + attempts;
+            if (attempts <= 0) revealFinal();
+        }
+
+        function checkBox(n) {
+            if (n === 3) {
+                revealFinal();
+                return;
+            }
+            attempts--;
+            if (attempts === 0) {
+                setTimeout(revealFinal, 300);
+            } else {
+                if (n === 1) document.getElementById('modal-1').style.display = 'flex';
+                else if (n === 4) document.getElementById('modal-4').style.display = 'flex';
+                else {
+                    alert("Empty! Try another one. 😉");
+                    document.getElementById('chance-text').innerText = "Chances left: " + attempts;
+                }
+            }
+        }
+
+        function revealFinal() {
+            const tada = document.getElementById('tadaSound');
+            tada.currentTime = 0;
+            tada.play().catch(()=>{});
+            document.getElementById('modal-3').style.display = 'flex';
+        }
+
+        // GENERATE HANGING HEARTS
+        const heartContainer = document.getElementById('hearts-bg');
+        for (let i = 0; i < 30; i++) {
+            const h = document.createElement('div');
+            h.className = 'hanging-heart';
+            h.style.left = (Math.random() * 97) + '%';
+            h.style.height = (Math.random() * 300 + 80) + 'px';
+            h.style.setProperty('--speed', (Math.random() * 2 + 3) + 's');
+            h.style.setProperty('--size', (Math.random() * 10 + 20) + 'px');
+            heartContainer.appendChild(h);
+        }
+    </script>
+</body>
+          </html>
+          
